@@ -23,4 +23,7 @@ bool addi(CPU *cpu, uint32_t word);
 bool addiu(CPU *cpu, uint32_t word);
 
 bool andi(CPU *cpu, uint32_t word);
+
+bool lui(CPU *cpu, uint32_t word);
+
 #endif //MIPS_EMULATOR_R_TYPE_H

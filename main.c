@@ -18,13 +18,11 @@ void output_registers(CPU *cpu) {
 
 int main(void) {
     CPU cpu = init_cpu();
-    cpu.mem[0] = 0x2008000a; // addi $t0, $zero, 10
-    cpu.mem[1] = 0x20090005; // addi $t1, $zero, 5
-    cpu.mem[2] = 0x310a000a; // andi $t2, $t0, 10
+    cpu.mem[0] = 0x3C08000A; // addi $t0, $zero, 10
 
     // Loop over the instructions, with the same reference to the CPU
     // Instructions will be in the memory, which the PC then offsets
-    while (cpu.pc < 3) {
+    while (cpu.pc < 1) {
         uint32_t instruction = cpu.mem[cpu.pc];
 
         uint8_t opcode = get_opcode(instruction);
@@ -48,6 +46,11 @@ int main(void) {
                     break;
                 case 0xC:
                     if (!andi(&cpu, instruction)) {
+                        printf("Error occurred.");
+                    }
+                    break;
+                case 0xF:
+                    if (!lui(&cpu, instruction)) {
                         printf("Error occurred.");
                     }
                     break;

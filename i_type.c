@@ -85,3 +85,19 @@ bool andi(CPU *cpu, uint32_t word) {
 
     return true;
 }
+
+/*
+ * lui - Load Upper Immediate
+ *
+ * This loads a 16 bit immediate into the upper 16 bits of the 32 bit register.
+ * It fills the rest of them with 0's
+ *
+ * Only have the $rt and immediate. $rs will be set to 00000
+ */
+bool lui(CPU *cpu, uint32_t word) {
+    Fields f = disassemble_word(word);
+
+    cpu->regs[f.rt] = (uint32_t) f.immediate << 16;
+    cpu->pc++; // Increment PC
+    return true;
+}
