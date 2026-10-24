@@ -18,42 +18,46 @@ void output_registers(CPU *cpu) {
 
 int main(void) {
     CPU cpu = init_cpu();
+    cpu.mem[0] = 0x2008000a; // addi $t0, $zero, 10
+    cpu.mem[1] = 0x20090005; // addi $t1, $zero, 5
+    cpu.mem[2] = 0x310a000a; // andi $t2, $t0, 10
 
-    cpu.regs[8] = 13;
+    // Loop over the instructions, with the same reference to the CPU
+    // Instructions will be in the memory, which the PC then offsets
+    while (cpu.pc < 3) {
+        uint32_t instruction = cpu.mem[cpu.pc];
 
-    uint32_t word_1 = 0x3109000c;
+        uint8_t opcode = get_opcode(instruction);
 
-    uint8_t opcode = get_opcode(word_1);
-
-
-    // First step is to figure out the instruction type from the opcode.
-
-    if (opcode == 0x00) { // R-Type
-        printf("R-Type");
-    } else if (opcode == 0x02 || opcode == 0x03) { // J-Type
-        printf("J-Type");
-    } else { // I-Type
-        // Generic
-        switch (opcode) {
-            case 0x8:
-                if (!addi(&cpu, word_1)) {
-                    printf("Error occurred.");
-                }
-                break;
-            case 0x9:
-                if (!addiu(&cpu, word_1)) {
-                    printf("Error occurred.");
-                }
-                break;
-            case 0xC:
-                if (!andi(&cpu, word_1)) {
-                    printf("Error occurred.");
-                }
-                break;
-            default:
-                perror("Something went wrong.");
-                break;
+        if (opcode == 0x00) { // R-Type
+            printf("R-Type");
+        } else if (opcode == 0x02 || opcode == 0x03) { // J-Type
+            printf("J-Type");
+        } else { // I-Type
+            // Generic
+            switch (opcode) {
+                case 0x8:
+                    if (!addi(&cpu, instruction)) {
+                        printf("Error occurred.");
+                    }
+                    break;
+                case 0x9:
+                    if (!addiu(&cpu, instruction)) {
+                        printf("Error occurred.");
+                    }
+                    break;
+                case 0xC:
+                    if (!andi(&cpu, instruction)) {
+                        printf("Error occurred.");
+                    }
+                    break;
+                default:
+                    perror("Something went wrong.");
+                    break;
+            }
         }
+
+        // we increment the program counter in the function, as some do it differently!
     }
 
     output_registers(&cpu);

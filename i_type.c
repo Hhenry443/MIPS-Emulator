@@ -42,10 +42,12 @@ bool addi(CPU *cpu, uint32_t word) {
 
     // If we add them and the MSB is 1, then we know an overflow has occurred
     if (!!(f.immediate + cpu->regs[f.rs] & 0x80000000)) {
+        cpu->pc++; // Increment PC
         return false;
     } else {
         // If not, complete the addition.
         cpu->regs[f.rt] = cpu->regs[f.rs] + f.immediate;
+        cpu->pc++; // Increment PC
         return true;
     }
 }
@@ -62,6 +64,7 @@ bool addiu(CPU *cpu, uint32_t word) {
 
     // If not, complete the addition.
     cpu->regs[f.rt] = cpu->regs[f.rs] + sign_extend(f.immediate);
+    cpu->pc++; // Increment PC
     return true;
 }
 
@@ -78,4 +81,7 @@ bool andi(CPU *cpu, uint32_t word) {
 
     // Insert
     cpu->regs[f.rt] = cpu->regs[f.rs] & f.immediate;
+    cpu->pc++; // Increment PC
+
+    return true;
 }

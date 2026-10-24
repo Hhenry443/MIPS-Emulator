@@ -10,7 +10,7 @@
 typedef struct CPU_Struct {
     uint32_t regs[32];
     uint32_t pc;
-    uint8_t mem[4096];
+    uint32_t mem[4096];
 } CPU;
 
 CPU init_cpu();
