@@ -20,16 +20,15 @@ Fields disassemble_word(uint32_t word) {
     return f;
 }
 
-int16_t sign_extend(uint16_t imm) {
-    int ext_imm = imm & 0xFFFF;
-
-    if (ext_imm & 0x80000000) {
-        // if negative, append leading 1's to the og value
-        ext_imm = ext_imm | 0xFFFF0000;
-    }
-
-    return (int16_t) ext_imm;
+/*
+ * Sign extend a 16 bit integer to 32 bits.
+ *
+ * This will add 1's if the sign bit is 1 and 0 if the sign bit is 0
+ */
+int32_t sign_extend(uint32_t imm) {
+    return (uint32_t)(int32_t)(int16_t)(imm & 0xFFFF);
 }
+
 /*
  * addi - Add Immediate
  *
@@ -52,7 +51,11 @@ bool addi(CPU *cpu, uint32_t word) {
 }
 
 /*
- * addiu -
+ * addiu - Add Immediate Unsigned
+ *
+ * This adds an immediate value to a register without triggering an overflow exception
+ *
+ * Uses sign extension to turn the 16 bit immediate into a 32 bit integer
  */
 bool addiu(CPU *cpu, uint32_t word) {
     Fields f = disassemble_word(word);
@@ -60,5 +63,19 @@ bool addiu(CPU *cpu, uint32_t word) {
     // If not, complete the addition.
     cpu->regs[f.rt] = cpu->regs[f.rs] + sign_extend(f.immediate);
     return true;
-};
+}
 
+/*
+ * andi - Bitwise AND Immediate
+ *
+ * Performs a bitwise AND operation between a source register value and a 16 bit immediate.
+ *
+ * The result is stored in the destination register
+ */
+bool andi(CPU *cpu, uint32_t word) {
+    // This one isn't too hard
+    Fields f = disassemble_word(word);
+
+    // Insert
+    cpu->regs[f.rt] = cpu->regs[f.rs] & f.immediate;
+}

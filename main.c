@@ -19,7 +19,9 @@ void output_registers(CPU *cpu) {
 int main(void) {
     CPU cpu = init_cpu();
 
-    uint32_t word_1 = 0x25090001;
+    cpu.regs[8] = 13;
+
+    uint32_t word_1 = 0x3109000c;
 
     uint8_t opcode = get_opcode(word_1);
 
@@ -40,6 +42,11 @@ int main(void) {
                 break;
             case 0x9:
                 if (!addiu(&cpu, word_1)) {
+                    printf("Error occurred.");
+                }
+                break;
+            case 0xC:
+                if (!andi(&cpu, word_1)) {
                     printf("Error occurred.");
                 }
                 break;

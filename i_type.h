@@ -16,9 +16,11 @@ typedef struct Fields_Struct {
 
 Fields disassemble_word(uint32_t word);
 
-int16_t sign_extend(uint16_t imm);
+int32_t sign_extend(uint32_t imm);
 
 bool addi(CPU *cpu, uint32_t word);
 
 bool addiu(CPU *cpu, uint32_t word);
+
+bool andi(CPU *cpu, uint32_t word);
 #endif //MIPS_EMULATOR_R_TYPE_H
